@@ -24,7 +24,7 @@ on:
 jobs:
   build:
     name: Build ${{ github.event.inputs.device }}
-    runs-on: [self-hosted, ZeroWrt]
+    runs-on: self-hosted
     defaults:
       run:
         shell: bash
