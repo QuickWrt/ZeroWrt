@@ -54,7 +54,7 @@ jobs:
 
     - name: Prepare Firmware Files
       run: |
-        mkdir -p rom info
+        mkdir -p rom
         elif [ "${{ github.event.inputs.device }}" = "x86_64" ]; then
           cp -a openwrt/bin/targets/x86/*/*-squashfs-combined-efi.img.gz rom/
           cp -a openwrt/bin/targets/x86/*/*-generic-rootfs.tar.gz rom/
