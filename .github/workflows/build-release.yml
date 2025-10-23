@@ -73,6 +73,9 @@ jobs:
       id: compile
       run: |
         bash <(curl -sS ${{ secrets.script_url_general }}) v24 ${{ github.event.inputs.device }} ${{ github.event.inputs.compile_options }}
+        cd openwrt
+        tags=$(git describe --abbrev=0 --tags)
+        echo "latest_release=$tags" >>$GITHUB_ENV
 
     - name: Extensive logs after a failed compilation
       if: steps.compile.outcome == 'failure'
@@ -128,11 +131,13 @@ jobs:
         path: ${{ env.build_dir }}/rom/*
         
     - name: Create release
-      continue-on-error: true
-      uses: softprops/action-gh-release@v2
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN  }}
+      uses: ncipollo/release-action@v1.14.0
       with:
-        tag_name: ${{ env.latest_release }}
-        body_path: ${{ env.build_dir }}/openwrt/info.md
-        files: ${{ env.build_dir }}/rom/*
+        name: OpenWrt-${{ env.latest_release }}
+        allowUpdates: true
+        tag: ${{ env.latest_release }}
+        commit: main
+        replacesArtifacts: true
+        token: ${{ secrets.workflow_token }}
+        artifacts: |
+          ${{ env.build_dir }}/rom/*
