@@ -3,14 +3,6 @@ name: Build releases
 on:
   workflow_dispatch:
     inputs:
-      device:
-        description: '选择构建设备'
-        required: true
-        default: 'x86_64'
-        type: choice
-        options:
-          - 'rockchip'
-          - 'x86_64'
       compile_options:
         description: '选择构建选项'
         required: true
@@ -20,19 +12,37 @@ on:
           - 'accelerated'
           - 'normal'
           - 'toolchain-only' 
+  repository_dispatch:
+    types: [release]
 
 jobs:
   build:
-    name: Build ${{ github.event.inputs.device }}
-    runs-on: self-hosted
+    name: Build ${{ matrix.model }}-${{ matrix.tag.version }}
+    runs-on: ubuntu-24.04
     defaults:
       run:
         shell: bash
+    strategy:
+      fail-fast: false
+      matrix:
+        model:
+          - rockchip
+          - x86_64
 
     steps:
-    - name: 查看
+    - name: Checkout
+      continue-on-error: true
       uses: actions/checkout@main
+      with:
+        path: ZeroWrt
 
+    - name: Setup variables
+      run: |
+        sudo timedatectl set-timezone 'Asia/Shanghai'
+        git config --global user.name 'actions'
+        git config --global user.email 'action@github.com'
+        echo build_dir="/builder" >> "$GITHUB_ENV"
+        
     - name: Show system
       run: |
         echo -e "\n\e[1;32mCPU:\e[0m"
@@ -47,25 +57,82 @@ jobs:
         uname -a
         echo
 
+    - name: Free disk space
+      uses: sbwml/actions@free-disk
+      with:
+        build-mount-path: /builder
+
+    - name: Build System Setup
+      uses: sbwml/actions@openwrt-build-setup
+
+    - name: Install LLVM
+      uses: sbwml/actions@install-llvm
+      
     - name: Compile OpenWrt
+      working-directory: /builder
       id: compile
       run: |
         bash <(curl -sS ${{ secrets.script_url_general }}) v24 ${{ github.event.inputs.device }} ${{ github.event.inputs.compile_options }}
 
-    - name: Prepare Firmware Files
+    - name: Extensive logs after a failed compilation
+      if: steps.compile.outcome == 'failure'
+      working-directory: /builder
       run: |
-        mkdir -p rom
-        if [ "${{ github.event.inputs.device }}" = "x86_64" ]; then
+        cd openwrt
+        make V=s IGNORE_ERRORS="n m"
+        
+    - name: Prepare Firmware Files
+      working-directory: /builder
+      run: |
+        mkdir -p rom info
+        if [ "${{ matrix.model }}" = "rockchip" ]; then
+          cp -a openwrt/bin/targets/rockchip/*/*.img.gz rom/
+          cp -a openwrt/bin/targets/rockchip/*/*.manifest info/manifest.txt
+          cp -a openwrt/bin/targets/rockchip/*/config.buildinfo info/config.buildinfo
+          cd rom && sha256sum * > ../info/sha256sums.txt
+        elif [ "${{ matrix.model }}" = "x86_64" ]; then
+          cp -a openwrt/bin/targets/x86/*/*-ext4-combined-efi.img.gz rom/
           cp -a openwrt/bin/targets/x86/*/*-squashfs-combined-efi.img.gz rom/
           cp -a openwrt/bin/targets/x86/*/*-generic-rootfs.tar.gz rom/
-        elif [ "${{ github.event.inputs.device }}" = "rockchip" ]; then
-          cp -a openwrt/bin/targets/rockchip/*/*.img.gz rom/
+          cp -a openwrt/bin/targets/x86/*/*-x86-64-generic.manifest info/manifest.txt
+          cp -a openwrt/bin/targets/x86/*/config.buildinfo info/config.buildinfo
+          cd rom && sha256sum * > ../info/sha256sums.txt
         fi
+        cd ..
+        tar zcf rom/buildinfo_${{ matrix.model }}.tar.gz info
 
+    - name: Prepare Kernel Files
+      working-directory: /builder
+      run: |
+        base_name=$(basename ${{ env.build_dir }}/openwrt/*-*.tar.gz)
+        kmod_name=$(echo $base_name | sed 's/~/-/g')
+        mv ${{ env.build_dir }}/openwrt/*-*.tar.gz ${{ env.build_dir }}/openwrt/$kmod_name
+
+    - name: Release kernel modules
+      uses: ncipollo/release-action@v1.14.0
+      with:
+        name: kmod-snapshot
+        allowUpdates: true
+        prerelease: true
+        tag: snapshot
+        commit: openwrt-24.10
+        replacesArtifacts: true
+        token: ${{ secrets.GITHUB_TOKEN  }}
+        artifacts: |
+          ${{ env.build_dir }}/openwrt/*-*.tar.gz
+        
+    - name: Upload artifacts
+      uses: actions/upload-artifact@v4
+      with:
+        name: ${{ github.event.inputs.device }}-openwrt-${{ env.latest_release }}
+        path: ${{ env.build_dir }}/rom/*
+        
     - name: Create release
+      continue-on-error: true
       uses: softprops/action-gh-release@v2
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN  }}
       with:
-        tag_name: openwrt-24.10
+        tag_name: ${{ env.latest_release }}
+        body_path: ${{ env.build_dir }}/openwrt/info.md
         files: ${{ env.build_dir }}/rom/*
