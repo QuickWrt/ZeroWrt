@@ -37,14 +37,11 @@ jobs:
     - name: Checkout
       continue-on-error: true
       uses: actions/checkout@main
-      with:
-        path: ZeroWrt
 
     - name: Setup variables
       run: |
         git config --global user.name 'actions'
         git config --global user.email 'action@github.com'
-        echo build_dir="/build" >> "$GITHUB_ENV" && mkdir -p "${GITHUB_WORKSPACE}/build"
         
     - name: Show system
       run: |
@@ -72,7 +69,6 @@ jobs:
 #      uses: sbwml/actions@install-llvm
       
     - name: Compile OpenWrt
-      working-directory: /builder
       id: compile
       run: |
         bash <(curl -sS ${{ secrets.script_url_general }}) v24 ${{ github.event.inputs.device }} ${{ github.event.inputs.compile_options }}
@@ -82,7 +78,6 @@ jobs:
 
     - name: Extensive logs after a failed compilation
       if: steps.compile.outcome == 'failure'
-      working-directory: /builder
       run: |
         cd openwrt
         make V=s IGNORE_ERRORS="n m"
@@ -103,7 +98,6 @@ jobs:
           
     - name: Prepare Firmware Files
       if: github.event.inputs.compile_options != 'toolchain-only'
-      working-directory: /builder
       run: |
         mkdir -p rom info
         if [ "${{ github.event.inputs.device }}" = "rockchip" ]; then
@@ -124,7 +118,6 @@ jobs:
 
     - name: Prepare Kernel Files
       if: github.event.inputs.compile_options != 'toolchain-only'
-      working-directory: /builder
       run: |
         base_name=$(basename ${{ env.build_dir }}/openwrt/*-*.tar.gz)
         kmod_name=$(echo $base_name | sed 's/~/-/g')
