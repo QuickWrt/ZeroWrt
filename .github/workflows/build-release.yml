@@ -3,8 +3,16 @@ name: Build releases
 on:
   workflow_dispatch:
     inputs:
+      device:
+        description: 'Select the build device'
+        required: true
+        default: 'x86_64'
+        type: choice
+        options:
+          - 'rockchip'
+          - 'x86_64'
       compile_options:
-        description: '选择构建选项'
+        description: 'Build options (separate multiple options with spaces)'
         required: true
         default: 'release'
         type: choice
@@ -12,12 +20,10 @@ on:
           - 'accelerated'
           - 'normal'
           - 'toolchain-only' 
-  repository_dispatch:
-    types: [release]
 
 jobs:
   build:
-    name: Build ${{ matrix.model }}
+    name: Build ${{ github.event.inputs.device }}
     runs-on: self-hosted
 #    env:
 #      TERM: xterm-256color
@@ -26,12 +32,6 @@ jobs:
     defaults:
       run:
         shell: bash
-    strategy:
-      fail-fast: false
-      matrix:
-        model:
-          - rockchip
-          - x86_64
 
     steps:
     - name: Checkout
@@ -76,7 +76,7 @@ jobs:
       working-directory: /builder
       id: compile
       run: |
-        bash <(curl -sS ${{ secrets.script_url_general }}) v24 ${{ matrix.model }} ${{ github.event.inputs.compile_options }}
+        bash <(curl -sS ${{ secrets.script_url_general }}) v24 ${{ github.event.inputs.device }} ${{ github.event.inputs.compile_options }}
         cd openwrt
         tags=$(git describe --abbrev=0 --tags)
         echo "latest_release=$tags" >>$GITHUB_ENV
@@ -107,12 +107,12 @@ jobs:
       working-directory: /builder
       run: |
         mkdir -p rom info
-        if [ "${{ matrix.model }}" = "rockchip" ]; then
+        if [ "${{ github.event.inputs.device }}" = "rockchip" ]; then
           cp -a openwrt/bin/targets/rockchip/*/*.img.gz rom/
           cp -a openwrt/bin/targets/rockchip/*/*.manifest info/manifest.txt
           cp -a openwrt/bin/targets/rockchip/*/config.buildinfo info/config.buildinfo
           cd rom && sha256sum * > ../info/sha256sums.txt
-        elif [ "${{ matrix.model }}" = "x86_64" ]; then
+        elif [ "${{ github.event.inputs.device }}" = "x86_64" ]; then
           cp -a openwrt/bin/targets/x86/*/*-ext4-combined-efi.img.gz rom/
           cp -a openwrt/bin/targets/x86/*/*-squashfs-combined-efi.img.gz rom/
           cp -a openwrt/bin/targets/x86/*/*-generic-rootfs.tar.gz rom/
