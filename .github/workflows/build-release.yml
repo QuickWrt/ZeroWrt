@@ -17,7 +17,7 @@ on:
 
 jobs:
   build:
-    name: Build ${{ matrix.model }}-${{ matrix.tag.version }}
+    name: Build ${{ matrix.model }}
     runs-on: ubuntu-24.04
     defaults:
       run:
