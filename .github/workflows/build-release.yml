@@ -164,3 +164,31 @@ jobs:
         token: ${{ secrets.GITHUB_TOKEN }}
         artifacts: |
           ${{ env.build_dir }}/rom/*
+
+    - name: Release OTA
+      if: github.event.inputs.compile_options != 'toolchain-only'
+      uses: SamKirkland/FTP-Deploy-Action@v4.3.5
+      with:
+        server: ${{ secrets.ftp_address }}
+        username: ftpopenwrt
+        password: ${{ secrets.ftp_password }}
+        server-dir: ota/
+        local-dir: ota/
+        dangerous-clean-slate: true
+
+    - name: Sync kernel modules
+      if: github.event.inputs.compile_options != 'toolchain-only'
+      uses: peter-evans/repository-dispatch@v3
+      with:
+        token: ${{ secrets.workflow_token }}
+        repository: NeonPulse-Zero/openwrt-core
+        event-type: sync
+
+    - name: Delete releases and workflows runs
+      uses: ophub/delete-releases-workflows@main
+      with:
+        delete_releases: true
+        releases_keep_latest: 5
+        delete_workflows: true
+        workflows_keep_day: 1
+        gh_token: ${{ secrets.workflow_token }}
