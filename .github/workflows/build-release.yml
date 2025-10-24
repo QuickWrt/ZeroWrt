@@ -94,7 +94,7 @@ jobs:
         tag: Toolchain-Cache
         commit: main
         replacesArtifacts: true
-        token: ${{ secrets.workflow_token }}
+        token: ${{ secrets.GITHUB_TOKEN }}
         artifacts: |
           toolchain-cache/*
           
@@ -137,7 +137,7 @@ jobs:
         tag: snapshot
         commit: master
         replacesArtifacts: true
-        token: ${{ secrets.GITHUB_TOKEN  }}
+        token: ${{ secrets.GITHUB_TOKEN }}
         artifacts: |
           ${{ env.build_dir }}/openwrt/*-*.tar.gz
         
@@ -157,6 +157,6 @@ jobs:
         tag: ${{ env.latest_release }}
         commit: master
         replacesArtifacts: true
-        token: ${{ secrets.workflow_token }}
+        token: ${{ secrets.GITHUB_TOKEN }}
         artifacts: |
           ${{ env.build_dir }}/rom/*
