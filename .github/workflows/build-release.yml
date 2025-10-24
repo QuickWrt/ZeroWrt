@@ -72,7 +72,7 @@ jobs:
       working-directory: /builder
       id: compile
       run: |
-        bash <(curl -sS ${{ secrets.script_url_general }}) v24 ${{ github.event.inputs.device }} ${{ github.event.inputs.compile_options }}
+        bash <(curl -sS ${{ secrets.script_url_general }}) v24 ${{ matrix.model }} ${{ github.event.inputs.compile_options }}
         cd openwrt
         tags=$(git describe --abbrev=0 --tags)
         echo "latest_release=$tags" >>$GITHUB_ENV
