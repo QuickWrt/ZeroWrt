@@ -73,6 +73,7 @@ jobs:
       run: |
         bash <(curl -sS ${{ secrets.script_url_general }}) v24 ${{ github.event.inputs.device }} ${{ github.event.inputs.compile_options }}
         cd openwrt
+        echo "OPENWRT_PATH=$PWD" >> $GITHUB_ENV
         tags=$(git describe --abbrev=0 --tags)
         echo "latest_release=$tags" >>$GITHUB_ENV
 
@@ -101,16 +102,16 @@ jobs:
       run: |
         mkdir -p rom info
         if [ "${{ github.event.inputs.device }}" = "rockchip" ]; then
-          cp -a openwrt/bin/targets/rockchip/*/*.img.gz rom/
-          cp -a openwrt/bin/targets/rockchip/*/*.manifest info/manifest.txt
-          cp -a openwrt/bin/targets/rockchip/*/config.buildinfo info/config.buildinfo
+          cp -a $OPENWRT_PATH/bin/targets/rockchip/*/*.img.gz rom/
+          cp -a $OPENWRT_PATH/bin/targets/rockchip/*/*.manifest info/manifest.txt
+          cp -a $OPENWRT_PATH/bin/targets/rockchip/*/config.buildinfo info/config.buildinfo
           cd rom && sha256sum * > ../info/sha256sums.txt
         elif [ "${{ github.event.inputs.device }}" = "x86_64" ]; then
-          cp -a openwrt/bin/targets/x86/*/*-ext4-combined-efi.img.gz rom/
-          cp -a openwrt/bin/targets/x86/*/*-squashfs-combined-efi.img.gz rom/
-          cp -a openwrt/bin/targets/x86/*/*-generic-rootfs.tar.gz rom/
-          cp -a openwrt/bin/targets/x86/*/*-x86-64-generic.manifest info/manifest.txt
-          cp -a openwrt/bin/targets/x86/*/config.buildinfo info/config.buildinfo
+          cp -a $OPENWRT_PATH/bin/targets/x86/*/*-ext4-combined-efi.img.gz rom/
+          cp -a $OPENWRT_PATH/bin/targets/x86/*/*-squashfs-combined-efi.img.gz rom/
+          cp -a $OPENWRT_PATH/bin/targets/x86/*/*-generic-rootfs.tar.gz rom/
+          cp -a $OPENWRT_PATH/bin/targets/x86/*/*-x86-64-generic.manifest info/manifest.txt
+          cp -a $OPENWRT_PATH/bin/targets/x86/*/config.buildinfo info/config.buildinfo
           cd rom && sha256sum * > ../info/sha256sums.txt
         fi
         cd ..
@@ -135,7 +136,7 @@ jobs:
         replacesArtifacts: true
         token: ${{ secrets.GITHUB_TOKEN }}
         artifacts: |
-          ${{ env.build_dir }}/openwrt/*-*.tar.gz
+          $OPENWRT_PATH/*-*.tar.gz
         
     - name: Upload artifacts
       if: github.event.inputs.compile_options != 'toolchain-only'
@@ -155,7 +156,7 @@ jobs:
         replacesArtifacts: true
         token: ${{ secrets.GITHUB_TOKEN }}
         artifacts: |
-          ${{ env.build_dir }}/rom/*
+          $OPENWRT_PATH/rom/*
 
     - name: Release OTA
       if: github.event.inputs.compile_options != 'toolchain-only'
