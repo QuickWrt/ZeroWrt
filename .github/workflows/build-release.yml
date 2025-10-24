@@ -44,7 +44,7 @@ jobs:
       run: |
         git config --global user.name 'actions'
         git config --global user.email 'action@github.com'
-        echo build_dir="/QuickWrt" >> "$GITHUB_ENV"
+        echo build_dir="/QuickWrt" >> "$GITHUB_ENV" && mkdir -p /QuickWrt
         
     - name: Show system
       run: |
