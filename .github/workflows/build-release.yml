@@ -181,7 +181,7 @@ jobs:
       uses: peter-evans/repository-dispatch@v3
       with:
         token: ${{ secrets.workflow_token }}
-        repository: NeonPulse-Zero/openwrt-core
+        repository: QuickWrt/openwrt-core
         event-type: sync
 
     - name: Delete releases and workflows runs
