@@ -83,8 +83,23 @@ jobs:
       run: |
         cd openwrt
         make V=s IGNORE_ERRORS="n m"
-        
+
+    - name: Create toolchain cache release
+      if: github.event.inputs.compile_options == 'toolchain-only'
+      uses: ncipollo/release-action@v1.14.0
+      with:
+        name: Toolchain-Cache
+        allowUpdates: true
+        prerelease: true
+        tag: Toolchain-Cache
+        commit: main
+        replacesArtifacts: true
+        token: ${{ secrets.workflow_token }}
+        artifacts: |
+          toolchain-cache/*
+          
     - name: Prepare Firmware Files
+      if: github.event.inputs.compile_options != 'toolchain-only'
       working-directory: /builder
       run: |
         mkdir -p rom info
@@ -105,6 +120,7 @@ jobs:
         tar zcf rom/buildinfo_${{ matrix.model }}.tar.gz info
 
     - name: Prepare Kernel Files
+      if: github.event.inputs.compile_options != 'toolchain-only'
       working-directory: /builder
       run: |
         base_name=$(basename ${{ env.build_dir }}/openwrt/*-*.tar.gz)
@@ -112,31 +128,34 @@ jobs:
         mv ${{ env.build_dir }}/openwrt/*-*.tar.gz ${{ env.build_dir }}/openwrt/$kmod_name
 
     - name: Release kernel modules
+      if: github.event.inputs.compile_options != 'toolchain-only'
       uses: ncipollo/release-action@v1.14.0
       with:
         name: kmod-snapshot
         allowUpdates: true
         prerelease: true
         tag: snapshot
-        commit: openwrt-24.10
+        commit: master
         replacesArtifacts: true
         token: ${{ secrets.GITHUB_TOKEN  }}
         artifacts: |
           ${{ env.build_dir }}/openwrt/*-*.tar.gz
         
     - name: Upload artifacts
+      if: github.event.inputs.compile_options != 'toolchain-only'
       uses: actions/upload-artifact@v4
       with:
         name: ${{ github.event.inputs.device }}-openwrt-${{ env.latest_release }}
         path: ${{ env.build_dir }}/rom/*
         
     - name: Create release
+      if: github.event.inputs.compile_options != 'toolchain-only'
       uses: ncipollo/release-action@v1.14.0
       with:
         name: OpenWrt-${{ env.latest_release }}
         allowUpdates: true
         tag: ${{ env.latest_release }}
-        commit: main
+        commit: master
         replacesArtifacts: true
         token: ${{ secrets.workflow_token }}
         artifacts: |
