@@ -115,7 +115,7 @@ jobs:
           cd rom && sha256sum * > ../info/sha256sums.txt
         fi
         cd ..
-        tar zcf rom/buildinfo_${{ matrix.model }}.tar.gz info
+        tar zcf rom/buildinfo_${{ github.event.inputs.device }}.tar.gz info
 
     - name: Prepare Kernel Files
       if: github.event.inputs.compile_options != 'toolchain-only'
