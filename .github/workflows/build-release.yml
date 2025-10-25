@@ -160,6 +160,7 @@ jobs:
     - name: Release OTA
       if: github.event.inputs.compile_options != 'toolchain-only'
       uses: SamKirkland/FTP-Deploy-Action@v4.3.5
+      continue-on-error: true
       with:
         server: ${{ secrets.ftp_address }}
         username: ftpopenwrt
