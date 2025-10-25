@@ -120,9 +120,9 @@ jobs:
     - name: Prepare Kernel Files
       if: github.event.inputs.compile_options != 'toolchain-only'
       run: |
-        base_name=$(basename ${{ env.build_dir }}/openwrt/*-*.tar.gz)
+        base_name=$(basename openwrt/*-*.tar.gz)
         kmod_name=$(echo $base_name | sed 's/~/-/g')
-        mv openwrt/*-*.tar.gz ${{ env.build_dir }}/openwrt/$kmod_name
+        mv openwrt/*-*.tar.gz openwrt/$kmod_name
 
     - name: Release kernel modules
       if: github.event.inputs.compile_options != 'toolchain-only'
