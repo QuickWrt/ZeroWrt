@@ -39,15 +39,11 @@ jobs:
     - name: Checkout
       continue-on-error: true
       uses: actions/checkout@main
-      with:
-        path: ZeroWrt
-        
+
     - name: Setup variables
       run: |
-        sudo timedatectl set-timezone 'Asia/Shanghai'
         git config --global user.name 'actions'
         git config --global user.email 'action@github.com'
-        echo build_dir="/builder" >> "$GITHUB_ENV"
         
     - name: Show system
       run: |
@@ -75,9 +71,7 @@ jobs:
       uses: sbwml/actions@install-llvm
       
     - name: Compile OpenWrt
-      working-directory: /builder
       id: compile
-      continue-on-error: true
       run: |
         bash <(curl -sS ${{ secrets.script_url_general }}) v24 ${{ github.event.inputs.device }} ${{ github.event.inputs.compile_options }}
         cd openwrt
@@ -85,13 +79,12 @@ jobs:
         echo "latest_release=$tags" >>$GITHUB_ENV
 
     - name: Extensive logs after a failed compilation
-      working-directory: /builder
       if: steps.compile.outcome == 'failure'
       run: |
         cd openwrt
         make V=s IGNORE_ERRORS="n m"
 
-    - name: Create toolchain cache release   
+    - name: Create toolchain cache release
       if: github.event.inputs.compile_options == 'toolchain-only'
       uses: ncipollo/release-action@v1.14.0
       with:
@@ -102,10 +95,10 @@ jobs:
         commit: master
         replacesArtifacts: true
         token: ${{ secrets.GITHUB_TOKEN }}
-        artifacts: openwrt/toolchain-cache/*
+        artifacts: |
+          openwrt/toolchain-cache/*
           
     - name: Prepare Firmware Files
-      working-directory: /builder
       if: github.event.inputs.compile_options != 'toolchain-only'
       run: |
         mkdir -p rom info
@@ -125,28 +118,7 @@ jobs:
         cd ..
         tar zcf rom/buildinfo_${{ github.event.inputs.device }}.tar.gz info
 
-    - name: Upload artifacts
-      if: github.event.inputs.compile_options != 'toolchain-only'
-      uses: actions/upload-artifact@v4
-      with:
-        name: ${{ github.event.inputs.device }}-openwrt-${{ env.latest_release }}
-        path: ${{ env.build_dir }}/rom/*
-        
-    - name: Create release
-      if: github.event.inputs.compile_options != 'toolchain-only'
-      continue-on-error: true
-      uses: ncipollo/release-action@v1.14.0
-      with:
-        name: OpenWrt-${{ env.latest_release }}
-        allowUpdates: true
-        tag: ${{ env.latest_release }}
-        commit: master
-        replacesArtifacts: true
-        token: ${{ secrets.GITHUB_TOKEN }}
-        artifacts: ${{ env.build_dir }}/rom/*
-
     - name: Prepare Kernel Files
-      working-directory: /builder
       if: github.event.inputs.compile_options != 'toolchain-only'
       run: |
         base_name=$(basename openwrt/*-*.tar.gz)
@@ -155,7 +127,6 @@ jobs:
 
     - name: Release kernel modules
       if: github.event.inputs.compile_options != 'toolchain-only'
-      continue-on-error: true
       uses: ncipollo/release-action@v1.14.0
       with:
         name: kmod-snapshot
@@ -165,11 +136,33 @@ jobs:
         commit: master
         replacesArtifacts: true
         token: ${{ secrets.GITHUB_TOKEN }}
-        artifacts: openwrt/*-*.tar.gz
-          
+        artifacts: |
+          openwrt/*-*.tar.gz
+        
+    - name: Upload artifacts
+      if: github.event.inputs.compile_options != 'toolchain-only'
+      uses: actions/upload-artifact@v4
+      with:
+        name: ${{ github.event.inputs.device }}-openwrt-${{ env.latest_release }}
+        path: rom/*
+        
+    - name: Create release
+      if: github.event.inputs.compile_options != 'toolchain-only'
+      uses: ncipollo/release-action@v1.14.0
+      with:
+        name: OpenWrt-${{ env.latest_release }}
+        allowUpdates: true
+        tag: ${{ env.latest_release }}
+        commit: master
+        replacesArtifacts: true
+        token: ${{ secrets.GITHUB_TOKEN }}
+        artifacts: |
+          rom/*
+
     - name: Release OTA
       if: github.event.inputs.compile_options != 'toolchain-only'
       uses: SamKirkland/FTP-Deploy-Action@v4.3.5
+      continue-on-error: true
       with:
         server: ${{ secrets.ftp_address }}
         username: ftpopenwrt
