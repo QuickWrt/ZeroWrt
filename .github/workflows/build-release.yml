@@ -95,8 +95,7 @@ jobs:
         commit: master
         replacesArtifacts: true
         token: ${{ secrets.GITHUB_TOKEN }}
-        artifacts: |
-          openwrt/toolchain-cache/*
+        artifacts: openwrt/toolchain-cache/*
           
     - name: Prepare Firmware Files
       if: github.event.inputs.compile_options != 'toolchain-only'
@@ -136,8 +135,7 @@ jobs:
         commit: master
         replacesArtifacts: true
         token: ${{ secrets.GITHUB_TOKEN }}
-        artifacts: |
-          openwrt/*-*.tar.gz
+        artifacts: openwrt/*-*.tar.gz
         
     - name: Upload artifacts
       if: github.event.inputs.compile_options != 'toolchain-only'
@@ -156,8 +154,7 @@ jobs:
         commit: master
         replacesArtifacts: true
         token: ${{ secrets.GITHUB_TOKEN }}
-        artifacts: |
-          rom/*
+        artifacts: rom/*
 
     - name: Release OTA
       if: github.event.inputs.compile_options != 'toolchain-only'
