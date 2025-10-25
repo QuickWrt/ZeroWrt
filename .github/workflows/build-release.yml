@@ -173,5 +173,5 @@ jobs:
       uses: peter-evans/repository-dispatch@v3
       with:
         token: ${{ secrets.workflow_token }}
-        repository: QuickWrt/openwrt-core
+        repository: QuickWrt/openwrt_core
         event-type: sync
