@@ -102,8 +102,7 @@ jobs:
         commit: master
         replacesArtifacts: true
         token: ${{ secrets.GITHUB_TOKEN }}
-        artifacts: |
-          openwrt/toolchain-cache/*
+        artifacts: openwrt/toolchain-cache/*
           
     - name: Prepare Firmware Files
       working-directory: /builder
