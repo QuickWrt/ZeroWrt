@@ -19,7 +19,9 @@ on:
         options:
           - 'accelerated'
           - 'normal'
-          - 'toolchain-only' 
+          - 'toolchain-only'
+  repository_dispatch:
+    types: [release]
 
 jobs:
   build:
