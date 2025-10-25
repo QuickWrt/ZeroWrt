@@ -91,11 +91,11 @@ jobs:
         allowUpdates: true
         prerelease: true
         tag: Toolchain-Cache
-        commit: main
+        commit: master
         replacesArtifacts: true
         token: ${{ secrets.GITHUB_TOKEN }}
         artifacts: |
-          toolchain-cache/*
+          $OPENWRT_PATH/toolchain-cache/*
           
     - name: Prepare Firmware Files
       if: github.event.inputs.compile_options != 'toolchain-only'
