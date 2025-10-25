@@ -26,11 +26,11 @@ on:
 jobs:
   build:
     name: Build ${{ github.event.inputs.device }}
-    runs-on: self-hosted
-#    env:
-#      TERM: xterm-256color
-#      LC_ALL: C.UTF-8
-#      LANG: zh_CN.UTF-8
+    runs-on: ubuntu-24.04
+    env:
+      TERM: xterm-256color
+      LC_ALL: C.UTF-8
+      LANG: zh_CN.UTF-8
     defaults:
       run:
         shell: bash
@@ -59,16 +59,16 @@ jobs:
         uname -a
         echo
 
-#    - name: Free disk space
-#      uses: sbwml/actions@free-disk
-#      with:
-#        build-mount-path: /builder
+    - name: Free disk space
+      uses: sbwml/actions@free-disk
+      with:
+        build-mount-path: /builder
 
-#    - name: Build System Setup
-#      uses: sbwml/actions@openwrt-build-setup
+    - name: Build System Setup
+      uses: sbwml/actions@openwrt-build-setup
 
-#    - name: Install LLVM
-#      uses: sbwml/actions@install-llvm
+    - name: Install LLVM
+      uses: sbwml/actions@install-llvm
       
     - name: Compile OpenWrt
       id: compile
