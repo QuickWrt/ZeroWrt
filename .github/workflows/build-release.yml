@@ -73,7 +73,6 @@ jobs:
       run: |
         bash <(curl -sS ${{ secrets.script_url_general }}) v24 ${{ github.event.inputs.device }} ${{ github.event.inputs.compile_options }}
         cd openwrt
-        echo "OPENWRT_PATH=$PWD" >> $GITHUB_ENV
         tags=$(git describe --abbrev=0 --tags)
         echo "latest_release=$tags" >>$GITHUB_ENV
 
