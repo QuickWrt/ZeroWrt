@@ -165,8 +165,8 @@ jobs:
         server: ${{ secrets.ftp_address }}
         username: ftpopenwrt
         password: ${{ secrets.ftp_password }}
-        server-dir: ota/
-        local-dir: ota/
+        server-dir: ota/openwrt/
+        local-dir: openwrt/ota/
         dangerous-clean-slate: true
 
     - name: Sync kernel modules
