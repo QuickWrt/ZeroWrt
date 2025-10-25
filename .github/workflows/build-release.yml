@@ -26,11 +26,11 @@ on:
 jobs:
   build:
     name: Build ${{ github.event.inputs.device }}
-    runs-on: ubuntu-24.04
-    env:
-      TERM: xterm-256color
-      LC_ALL: C.UTF-8
-      LANG: zh_CN.UTF-8
+    runs-on: self-hosted
+#    env:
+#      TERM: xterm-256color
+#      LC_ALL: C.UTF-8
+#      LANG: zh_CN.UTF-8
     defaults:
       run:
         shell: bash
@@ -59,16 +59,16 @@ jobs:
         uname -a
         echo
 
-    - name: Free disk space
-      uses: sbwml/actions@free-disk
-      with:
-        build-mount-path: /builder
+#    - name: Free disk space
+#      uses: sbwml/actions@free-disk
+#      with:
+#        build-mount-path: /builder
 
-    - name: Build System Setup
-      uses: sbwml/actions@openwrt-build-setup
+#    - name: Build System Setup
+#      uses: sbwml/actions@openwrt-build-setup
 
-    - name: Install LLVM
-      uses: sbwml/actions@install-llvm
+#    - name: Install LLVM
+#      uses: sbwml/actions@install-llvm
       
     - name: Compile OpenWrt
       id: compile
@@ -173,14 +173,5 @@ jobs:
       uses: peter-evans/repository-dispatch@v3
       with:
         token: ${{ secrets.workflow_token }}
-        repository: QuickWrt/openwrt_core
+        repository: QuickWrt/openwrt-core
         event-type: sync
-
-    - name: Delete releases and workflows runs
-      uses: ophub/delete-releases-workflows@main
-      with:
-        delete_releases: true
-        releases_keep_latest: 5
-        delete_workflows: true
-        workflows_keep_day: 1
-        gh_token: ${{ secrets.workflow_token }}
