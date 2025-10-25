@@ -142,7 +142,7 @@ jobs:
       uses: actions/upload-artifact@v4
       with:
         name: ${{ github.event.inputs.device }}-openwrt-${{ env.latest_release }}
-        path: openwrt/rom/*
+        path: rom/*
         
     - name: Create release
       if: github.event.inputs.compile_options != 'toolchain-only'
