@@ -176,12 +176,3 @@ jobs:
         token: ${{ secrets.workflow_token }}
         repository: QuickWrt/openwrt-core
         event-type: sync
-
-    - name: Delete releases and workflows runs
-      uses: ophub/delete-releases-workflows@main
-      with:
-        delete_releases: true
-        releases_keep_latest: 5
-        delete_workflows: true
-        workflows_keep_day: 1
-        gh_token: ${{ secrets.workflow_token }}
