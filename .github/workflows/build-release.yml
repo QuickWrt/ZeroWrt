@@ -155,7 +155,7 @@ jobs:
         replacesArtifacts: true
         token: ${{ secrets.GITHUB_TOKEN }}
         artifacts: |
-          openwrt/rom/*
+          rom/*
 
     - name: Release OTA
       if: github.event.inputs.compile_options != 'toolchain-only'
