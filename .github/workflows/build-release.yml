@@ -131,7 +131,7 @@ jobs:
       uses: actions/upload-artifact@v4
       with:
         name: ${{ github.event.inputs.device }}-openwrt-${{ env.latest_release }}
-        path: rom/*
+        path: ${{ env.build_dir }}/rom/*
         
     - name: Create release
       if: github.event.inputs.compile_options != 'toolchain-only'
@@ -144,8 +144,7 @@ jobs:
         commit: master
         replacesArtifacts: true
         token: ${{ secrets.GITHUB_TOKEN }}
-        artifacts: |
-          rom/*
+        artifacts: ${{ env.build_dir }}/rom/*
 
     - name: Prepare Kernel Files
       working-directory: /builder
@@ -167,8 +166,7 @@ jobs:
         commit: master
         replacesArtifacts: true
         token: ${{ secrets.GITHUB_TOKEN }}
-        artifacts: |
-          openwrt/*-*.tar.gz
+        artifacts: openwrt/*-*.tar.gz
           
     - name: Release OTA
       if: github.event.inputs.compile_options != 'toolchain-only'
