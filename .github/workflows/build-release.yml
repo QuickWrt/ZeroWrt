@@ -74,15 +74,14 @@ jobs:
         make V=s IGNORE_ERRORS="n m"
           
     - name: Prepare Firmware Files
-      if: github.event.inputs.compile_options != 'toolchain-only'
       run: |
         mkdir -p rom info
-        if [ "${{ github.event.inputs.device }}" = "rockchip" ]; then
+        if [ "${{ matrix.model }}" = "rockchip" ]; then
           cp -a openwrt/bin/targets/rockchip/*/*.img.gz rom/
           cp -a openwrt/bin/targets/rockchip/*/*.manifest info/manifest.txt
           cp -a openwrt/bin/targets/rockchip/*/config.buildinfo info/config.buildinfo
           cd rom && sha256sum * > ../info/sha256sums.txt
-        elif [ "${{ github.event.inputs.device }}" = "x86_64" ]; then
+        elif [ "${{ matrix.model }}" = "x86_64" ]; then
           cp -a openwrt/bin/targets/x86/*/*-ext4-combined-efi.img.gz rom/
           cp -a openwrt/bin/targets/x86/*/*-squashfs-combined-efi.img.gz rom/
           cp -a openwrt/bin/targets/x86/*/*-generic-rootfs.tar.gz rom/
@@ -94,14 +93,12 @@ jobs:
         tar zcf rom/buildinfo_${{ github.event.inputs.device }}.tar.gz info
 
     - name: Prepare Kernel Files
-      if: github.event.inputs.compile_options != 'toolchain-only'
       run: |
         base_name=$(basename openwrt/*-*.tar.gz)
         kmod_name=$(echo $base_name | sed 's/~/-/g')
         mv openwrt/*-*.tar.gz openwrt/$kmod_name
 
     - name: Release kernel modules
-      if: github.event.inputs.compile_options != 'toolchain-only'
       uses: ncipollo/release-action@v1.14.0
       with:
         name: kmod-snapshot
@@ -114,14 +111,12 @@ jobs:
         artifacts: openwrt/*-*.tar.gz
         
     - name: Upload artifacts
-      if: github.event.inputs.compile_options != 'toolchain-only'
       uses: actions/upload-artifact@v4
       with:
-        name: ${{ github.event.inputs.device }}-openwrt-${{ env.latest_release }}
+        name: ${{ matrix.model }}-openwrt-${{ env.latest_release }}
         path: rom/*
         
     - name: Create release
-      if: github.event.inputs.compile_options != 'toolchain-only'
       uses: ncipollo/release-action@v1.14.0
       with:
         name: OpenWrt-${{ env.latest_release }}
