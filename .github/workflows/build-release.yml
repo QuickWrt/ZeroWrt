@@ -90,7 +90,7 @@ jobs:
           cd rom && sha256sum * > ../info/sha256sums.txt
         fi
         cd ..
-        tar zcf rom/buildinfo_${{ github.event.inputs.device }}.tar.gz info
+        tar zcf rom/buildinfo_${{ matrix.model }}.tar.gz info
 
     - name: Prepare Kernel Files
       run: |
