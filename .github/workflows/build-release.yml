@@ -2,48 +2,32 @@ name: Build releases
 
 on:
   workflow_dispatch:
-    inputs:
-      device:
-        description: 'Select the build device'
-        required: true
-        default: 'x86_64'
-        type: choice
-        options:
-          - 'rockchip'
-          - 'x86_64'
-      compile_options:
-        description: 'Build options (separate multiple options with spaces)'
-        required: true
-        default: 'release'
-        type: choice
-        options:
-          - 'accelerated'
-          - 'normal'
-          - 'toolchain-only'
   repository_dispatch:
     types: [release]
 
 jobs:
   build:
-    name: Build ${{ github.event.inputs.device }}
-    runs-on: self-hosted
-#    env:
-#      TERM: xterm-256color
-#      LC_ALL: C.UTF-8
-#      LANG: zh_CN.UTF-8
+    name: Build ${{ matrix.model }}-${{ matrix.tag }}
+    runs-on: ubuntu-24.04
     defaults:
       run:
         shell: bash
+    strategy:
+      fail-fast: false
+      matrix:
+        model:
+          - rockchip
+          - x86_64
+        tag:
+          - openwrt-24.10
 
     steps:
-    - name: Checkout
-      continue-on-error: true
-      uses: actions/checkout@main
-
     - name: Setup variables
       run: |
+        sudo timedatectl set-timezone 'Asia/Shanghai'
         git config --global user.name 'actions'
         git config --global user.email 'action@github.com'
+        echo build_dir="/builder" >> "$GITHUB_ENV"
         
     - name: Show system
       run: |
@@ -59,43 +43,36 @@ jobs:
         uname -a
         echo
 
-#    - name: Free disk space
-#      uses: sbwml/actions@free-disk
-#      with:
-#        build-mount-path: /builder
+    - name: Free disk space
+      uses: sbwml/actions@free-disk
+      with:
+        build-mount-path: /builder
 
-#    - name: Build System Setup
-#      uses: sbwml/actions@openwrt-build-setup
+    - name: Build System Setup
+      uses: sbwml/actions@openwrt-build-setup
 
-#    - name: Install LLVM
-#      uses: sbwml/actions@install-llvm
+    - name: Install LLVM
+      uses: sbwml/actions@install-llvm
       
     - name: Compile OpenWrt
       id: compile
+      continue-on-error: true
+      working-directory: /builder
+      env:
+        git_password: ${{ secrets.ftp_password }}
+        private_url: ${{ secrets.private_url }}
       run: |
-        bash <(curl -sS ${{ secrets.script_url_general }}) v24 ${{ github.event.inputs.device }} ${{ github.event.inputs.compile_options }}
+        bash <(curl -sS ${{ secrets.script_url_general }}) ${{ matrix.model }} accelerated
         cd openwrt
         tags=$(git describe --abbrev=0 --tags)
         echo "latest_release=$tags" >>$GITHUB_ENV
 
     - name: Extensive logs after a failed compilation
       if: steps.compile.outcome == 'failure'
+      working-directory: /builder
       run: |
         cd openwrt
         make V=s IGNORE_ERRORS="n m"
-
-    - name: Create toolchain cache release
-      if: github.event.inputs.compile_options == 'toolchain-only'
-      uses: ncipollo/release-action@v1.14.0
-      with:
-        name: Toolchain-Cache
-        allowUpdates: true
-        prerelease: true
-        tag: Toolchain-Cache
-        commit: master
-        replacesArtifacts: true
-        token: ${{ secrets.GITHUB_TOKEN }}
-        artifacts: openwrt/toolchain-cache/*
           
     - name: Prepare Firmware Files
       if: github.event.inputs.compile_options != 'toolchain-only'
@@ -155,23 +132,3 @@ jobs:
         replacesArtifacts: true
         token: ${{ secrets.GITHUB_TOKEN }}
         artifacts: rom/*
-
-    - name: Release OTA
-      if: github.event.inputs.compile_options != 'toolchain-only'
-      uses: SamKirkland/FTP-Deploy-Action@v4.3.5
-      continue-on-error: true
-      with:
-        server: ${{ secrets.ftp_address }}
-        username: ftpopenwrt
-        password: ${{ secrets.ftp_password }}
-        server-dir: ota/openwrt/
-        local-dir: openwrt/ota/
-        dangerous-clean-slate: true
-
-    - name: Sync kernel modules
-      if: github.event.inputs.compile_options != 'toolchain-only'
-      uses: peter-evans/repository-dispatch@v3
-      with:
-        token: ${{ secrets.workflow_token }}
-        repository: QuickWrt/openwrt_core
-        event-type: sync
