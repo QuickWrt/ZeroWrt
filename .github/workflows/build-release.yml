@@ -65,7 +65,6 @@ jobs:
         cd openwrt
         tags=$(git describe --abbrev=0 --tags)
         echo "latest_release=$tags" >>$GITHUB_ENV
-        echo "OPENWRT_PATH=$PWD" >> $GITHUB_ENV
 
     - name: Extensive logs after a failed compilation
       if: steps.compile.outcome == 'failure'
@@ -75,29 +74,31 @@ jobs:
         make V=s IGNORE_ERRORS="n m"
           
     - name: Prepare Firmware Files
+      working-directory: /builder
       run: |
         mkdir -p rom info
         if [ "${{ matrix.model }}" = "rockchip" ]; then
-          cp -a $OPENWRT_PATH/bin/targets/rockchip/*/*.img.gz rom/
-          cp -a $OPENWRT_PATH/bin/targets/rockchip/*/*.manifest info/manifest.txt
-          cp -a $OPENWRT_PATH/bin/targets/rockchip/*/config.buildinfo info/config.buildinfo
+          cp -a openwrt/bin/targets/rockchip/*/*.img.gz rom/
+          cp -a openwrt/bin/targets/rockchip/*/*.manifest info/manifest.txt
+          cp -a openwrt/bin/targets/rockchip/*/config.buildinfo info/config.buildinfo
           cd rom && sha256sum * > ../info/sha256sums.txt
         elif [ "${{ matrix.model }}" = "x86_64" ]; then
-          cp -a $OPENWRT_PATH/bin/targets/x86/*/*-ext4-combined-efi.img.gz rom/
-          cp -a $OPENWRT_PATH/bin/targets/x86/*/*-squashfs-combined-efi.img.gz rom/
-          cp -a $OPENWRT_PATH/bin/targets/x86/*/*-generic-rootfs.tar.gz rom/
-          cp -a $OPENWRT_PATH/bin/targets/x86/*/*-x86-64-generic.manifest info/manifest.txt
-          cp -a $OPENWRT_PATH/bin/targets/x86/*/config.buildinfo info/config.buildinfo
+          cp -a openwrt/bin/targets/x86/*/*-ext4-combined-efi.img.gz rom/
+          cp -a openwrt/bin/targets/x86/*/*-squashfs-combined-efi.img.gz rom/
+          cp -a openwrt/bin/targets/x86/*/*-generic-rootfs.tar.gz rom/
+          cp -a openwrt/bin/targets/x86/*/*-x86-64-generic.manifest info/manifest.txt
+          cp -a openwrt/bin/targets/x86/*/config.buildinfo info/config.buildinfo
           cd rom && sha256sum * > ../info/sha256sums.txt
         fi
         cd ..
         tar zcf rom/buildinfo_${{ matrix.model }}.tar.gz info
 
     - name: Prepare Kernel Files
+      working-directory: /builder
       run: |
-        base_name=$(basename $OPENWRT_PATH/*-*.tar.gz)
+        base_name=$(basename openwrt/*-*.tar.gz)
         kmod_name=$(echo $base_name | sed 's/~/-/g')
-        mv $OPENWRT_PATH/*-*.tar.gz $OPENWRT_PATH/$kmod_name
+        mv openwrt/*-*.tar.gz openwrt/$kmod_name
 
     - name: Release kernel modules
       uses: ncipollo/release-action@v1.14.0
@@ -109,13 +110,13 @@ jobs:
         commit: master
         replacesArtifacts: true
         token: ${{ secrets.GITHUB_TOKEN }}
-        artifacts: $OPENWRT_PATH/*-*.tar.gz
+        artifacts: ${{ env.build_dir }}/openwrt/*-*.tar.gz
         
     - name: Upload artifacts
       uses: actions/upload-artifact@v4
       with:
         name: ${{ matrix.model }}-openwrt-${{ env.latest_release }}
-        path: rom/*
+        path: ${{ env.build_dir }}/rom/*
         
     - name: Create release
       uses: ncipollo/release-action@v1.14.0
@@ -126,4 +127,4 @@ jobs:
         commit: master
         replacesArtifacts: true
         token: ${{ secrets.GITHUB_TOKEN }}
-        artifacts: rom/*
+        artifacts: ${{ env.build_dir }}/rom/*
