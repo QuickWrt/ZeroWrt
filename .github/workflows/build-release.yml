@@ -95,9 +95,9 @@ jobs:
 
     - name: Prepare Kernel Files
       run: |
-        base_name=$(basename openwrt/*-*.tar.gz)
+        base_name=$(basename $OPENWRT_PATH/*-*.tar.gz)
         kmod_name=$(echo $base_name | sed 's/~/-/g')
-        mv openwrt/*-*.tar.gz openwrt/$kmod_name
+        mv $OPENWRT_PATH/*-*.tar.gz $OPENWRT_PATH/$kmod_name
 
     - name: Release kernel modules
       uses: ncipollo/release-action@v1.14.0
