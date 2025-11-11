@@ -113,6 +113,13 @@ jobs:
         replacesArtifacts: true
         token: ${{ secrets.GITHUB_TOKEN }}
         artifacts: ${{ env.build_dir }}/openwrt/*-*.tar.gz
+
+    - name: Sync kernel modules
+      uses: peter-evans/repository-dispatch@v3
+      with:
+        token: ${{ secrets.workflow_token }}
+        repository: QuickWrt/openwrt_core
+        event-type: sync
         
     - name: Upload artifacts
       uses: actions/upload-artifact@v4
