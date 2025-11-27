@@ -1,5 +1,5 @@
 <div align="center">
-  <img width="768" src="https://cdn.jsdelivr.net/gh/oppen321/OpenWrt/images/zeroWrt_logo.png"/>
+  <img width="768" src="https://cdn.jsdelivr.net/gh/haiibo/OpenWrt/images/openwrt.png"/>
   <h1>ZeroWrt — 基于 OpenWrt 的极致性能固件</h1>
 
   <img src="https://img.shields.io/github/downloads/oppen321/ZeroWrt/total.svg?style=for-the-badge&color=32C955"/>
@@ -76,10 +76,7 @@ ZeroWrt 内置了多个功能强大的插件，帮助你更好地管理网络和
 
 | **平台+设备名称**   | **固件编译状态**     | **固件下载**              |
 |:---------------------:|:--------------------:|:-------------------------:|
-| [X86_64 位](https://github.com/oppen321/ZeroWrt/releases/tag/X86_64) | ![编译状态](https://github.com/oppen321/ZeroWrt/actions/workflows/X86_64-OpenWrt.yml/badge.svg) | [下载链接](https://github.com/oppen321/ZeroWrt/releases/tag/X86_64) |
-| [ARMv8 Mini](https://github.com/oppen321/ZeroWrt/releases/tag/ARMv8_MINI) | ![编译状态](https://github.com/oppen321/ZeroWrt/actions/workflows/ARMv8-Mini-OpenWrt.yml/badge.svg) | [下载链接](https://github.com/oppen321/ZeroWrt/releases/tag/ARMv8_MINI) |
-| [ARMv8 Plus](https://github.com/oppen321/ZeroWrt/releases/tag/ARMv8_PLUS) | ![编译状态](https://github.com/oppen321/ZeroWrt/actions/workflows/ARMv8-Plus-OpenWrt.yml/badge.svg) | [下载链接](https://github.com/oppen321/ZeroWrt/releases/tag/ARMv8_PLUS) |
-| [Rockchip](https://github.com/oppen321/ZeroWrt/releases/tag/Rockchip) | ![编译状态](https://github.com/oppen321/ZeroWrt/actions/workflows/Rockchip-OpenWrt.yml/badge.svg) | [下载链接](https://github.com/oppen321/ZeroWrt/releases/tag/Rockchip) |
+| [固件地址](https://github.com/QuickWrt/ZeroWrt/releases/tag/X86_64) | ![编译状态](https://github.com/QuickWrt/ZeroWrt/actions/workflows/X86_64-OpenWrt.yml/badge.svg) | [下载链接](https://github.com/QuickWrt/ZeroWrt/releases/tag/X86_64) |
 
 ---
 
@@ -88,7 +85,7 @@ ZeroWrt 内置了多个功能强大的插件，帮助你更好地管理网络和
 2. **修改配置**：根据需要修改 `configs` 目录中的配置文件，或者上传自己的 `.config` 配置文件。
 3. **添加插件**：根据需求添加插件和功能。
 4. **运行编译**：进入 GitHub Actions，启动对应的编译工作流。
-5. **下载固件**：编译完成后，你可以在 [Releases](https://github.com/oppen321/ZeroWrt/releases) 页面下载最新固件。
+5. **下载固件**：编译完成后，你可以在 [Releases](https://github.com/QuickWrt/ZeroWrt/releases) 页面下载最新固件。
 
 ---
 
