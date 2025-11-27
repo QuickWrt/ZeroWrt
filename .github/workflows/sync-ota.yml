@@ -38,7 +38,7 @@ jobs:
           server: ${{ secrets.ftp_address }}
           username: ${{ secrets.ftp_username }}
           password: ${{ secrets.ftp_password }}
-          server-dir: ota/
+          server-dir: ota/openwrt/
           local-dir: ota/
           dangerous-clean-slate: true
 
