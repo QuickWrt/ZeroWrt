@@ -18,7 +18,7 @@
 
 ---
 
-## 📚 项目介绍 [![](https://img.shields.io/badge/-项目说明-FFFFFF.svg)](#项目介绍)
+## 📚 项目介绍 [![](https://img.shields.io/badge/-项目说明-FFFFFF.svg)](#项目介绍-)
 **ZeroWrt** 是一款基于 **原生 OpenWrt** 深度优化的高性能固件，致力于为用户提供 **更快、更稳定、更强大的网络体验**。无论你是家庭用户还是专业用户，ZeroWrt 都能为你提供极致的网络性能。
 
 - **构建来源**：[OpenWrt](https://github.com/openwrt/openwrt)  
@@ -27,7 +27,7 @@
 
 ---
 
-## 🔧 固件特色 [![](https://img.shields.io/badge/-固件亮点-FFFFFF.svg)](#固件特色)
+## 🔧 固件特色 [![](https://img.shields.io/badge/-固件亮点-FFFFFF.svg)](#固件特色-)
 ZeroWrt 打破了传统固件的局限，提供了前所未有的性能提升与稳定性：
 
 - 🚀 **kmod 内核模块完整支持**：保证设备兼容性。
@@ -43,7 +43,7 @@ ZeroWrt 打破了传统固件的局限，提供了前所未有的性能提升与
 
 ---
 
-## 💾 插件预览 [![](https://img.shields.io/badge/-插件展示-FFFFFF.svg)](#插件预览)
+## 💾 插件预览 [![](https://img.shields.io/badge/-插件展示-FFFFFF.svg)](#插件预览-)
 ZeroWrt 内置了多个功能强大的插件，帮助你更好地管理网络和设备：
 
 ### 常见插件列表：
@@ -71,7 +71,7 @@ ZeroWrt 内置了多个功能强大的插件，帮助你更好地管理网络和
 
 ---
 
-## 📥 固件下载 [![](https://img.shields.io/badge/-固件下载-FFFFFF.svg)](#固件下载)
+## 📥 固件下载 [![](https://img.shields.io/badge/-固件下载-FFFFFF.svg)](#固件下载-)
 点击下表中的下载链接，轻松获得你所需的固件版本。
 
 | **固件版本**   | **固件编译状态**     | **固件下载**              |
