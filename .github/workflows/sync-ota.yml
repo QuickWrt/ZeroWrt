@@ -36,7 +36,7 @@ jobs:
         uses: SamKirkland/FTP-Deploy-Action@v4.3.5
         with:
           server: ${{ secrets.ftp_address }}
-          username: ftpopenwrt
+          username: ${{ secrets.ftp_username }}
           password: ${{ secrets.ftp_password }}
           server-dir: ota/
           local-dir: ota/
