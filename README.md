@@ -76,7 +76,7 @@ ZeroWrt 内置了多个功能强大的插件，帮助你更好地管理网络和
 
 | **固件版本**   | **固件编译状态**     | **固件下载**              |
 |:---------------------:|:--------------------:|:-------------------------:|
-| [固件版本](https://github.com/QuickWrt/ZeroWrt/releases/tag/v24.10.4) | ![编译状态](https://github.com/QuickWrt/ZeroWrt/actions/workflows/build-release.yml/badge.svg) | [下载链接](https://github.com/QuickWrt/ZeroWrt/releases/tag/v24.10.4) |
+|openwrt-24.10| ![编译状态](https://github.com/QuickWrt/ZeroWrt/actions/workflows/build-release.yml/badge.svg) | [下载链接](https://github.com/QuickWrt/ZeroWrt/releases/tag/v24.10.4) |
 
 ---
 
