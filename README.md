@@ -1,36 +1,52 @@
-# 🌟 ZeroWrt —— 颠覆原生 OpenWrt，超高性能深度优化固件
+<div align="center">
+  <img width="768" src="https://cdn.jsdelivr.net/gh/oppen321/OpenWrt/images/zeroWrt_logo.png"/>
+  <h1>ZeroWrt — 基于 OpenWrt 的极致性能固件</h1>
 
-**ZeroWrt** 是一款基于 **原生 OpenWrt** 的深度优化固件，致力于提供 **卓越的性能、无与伦比的稳定性** 和 **极致的用户体验**。  
-通过一系列精心设计和高度定制的功能，ZeroWrt 打破了传统固件的瓶颈，完美适配家用路由、软路由、NAS 以及高性能网络需求。
+  <img src="https://img.shields.io/github/downloads/oppen321/ZeroWrt/total.svg?style=for-the-badge&color=32C955"/>
+  <img src="https://img.shields.io/github/stars/oppen321/ZeroWrt.svg?style=for-the-badge&color=orange"/>
+  <img src="https://img.shields.io/github/forks/oppen321/ZeroWrt.svg?style=for-the-badge&color=ff69b4"/>
+  <img src="https://img.shields.io/github/license/oppen321/ZeroWrt.svg?style=for-the-badge&color=blueviolet"/>
 
----
-
-## 🚀 ZeroWrt 强大特性
-
-ZeroWrt 汇聚了多项性能优化和创新特性，带来全方位的提升，超越传统 OpenWrt 固件：
-
-- 🔧 **全面内核支持**：包含所有常用内核模块（kmod），确保兼容性和扩展性。  
-- 🌐 **全锥型 NAT（NFT 和 BCM 双方案）**：为你提供更快更稳定的网络连接。  
-- ⚡ **AES 硬件加速（SS）**：通过硬件加速提升代理性能，享受无延迟的网络体验。  
-- 🧠 **构建优化（O3 & LTO）**：采用最新编译优化技术，极大提升固件性能。  
-- 🎮 **GPU 硬件加速**：充分挖掘硬件潜力，提升图形处理和视频解码能力。  
-- 🖥️ **HDMI 终端输出支持**：部分设备可通过 HDMI 实现图形化控制台输出，轻松管理设备。  
-- 🔄 **在线 OTA 升级（squashfs）**：支持固件在线无缝升级，保持系统持续更新。  
-- 🕰 **硬件 RTC 时钟（HYM8563）**：实时钟控件，保障系统时间准确无误。  
-- ♻️ **一键固件重置（squashfs）**：通过简单操作恢复默认设置，确保系统安全。  
-- 🛠 **网络优化（BBRv3 & TCP Brutal）**：为高流量场景提供更加高效的拥塞控制算法。  
-- 🔒 **LLVM-BPF 支持**：为现代网络功能提供强大支持，扩展 BPF 程序功能。  
-- 🔥 **Shortcut-FE（UDP 入站加速）**：提升UDP数据包的入站处理效率，适用于视频会议、在线游戏等应用。  
-- 🖥 **KVM 虚拟化支持**：强大的虚拟化能力，为你提供灵活的网络虚拟化环境。  
-- 🔐 **LRNG 高质量随机数生成（v57）**：提供更加安全和高效的随机数生成算法。  
-- ⚡ **HTTP/3 & QUIC 支持**：集成 NGINX & CURL，提升网页加载速度与网络响应效率。  
-- ❄️ **PWM 风扇控制**：动态调节风扇转速，提升设备散热效果。
+  [![](https://img.shields.io/badge/-目录:-696969.svg)](#readme) 
+  [![](https://img.shields.io/badge/-项目介绍-FFFFFF.svg)](#项目介绍) 
+  [![](https://img.shields.io/badge/-固件特色-FFFFFF.svg)](#固件特色)
+  [![](https://img.shields.io/badge/-固件下载-FFFFFF.svg)](#固件下载)
+  [![](https://img.shields.io/badge/-插件预览-FFFFFF.svg)](#插件预览)
+  [![](https://img.shields.io/badge/-编译指南-FFFFFF.svg)](#编译指南)
+  [![](https://img.shields.io/badge/-鸣谢-FFFFFF.svg)](#鸣谢)
+</div>
 
 ---
 
-## 🧩 ZeroWrt 内置插件（App）列表
+## 📚 项目介绍 [![](https://img.shields.io/badge/-项目说明-FFFFFF.svg)](#项目介绍)
+**ZeroWrt** 是一款基于 **原生 OpenWrt** 深度优化的高性能固件，致力于为用户提供 **更快、更稳定、更强大的网络体验**。无论你是家庭用户还是专业用户，ZeroWrt 都能为你提供极致的网络性能。
 
-ZeroWrt 内置了多个强大且精简的插件，覆盖了从网络管理到安全防护、系统优化等各个方面，确保每一个用户都能享受便捷的网络生活。
+- **构建来源**：[OpenWrt](https://github.com/openwrt/openwrt)  
+- **支持平台**：适配 ARMv8、Rockchip、树莓派、x86 等多平台设备
+- **优化特性**：采用全新内核、增强的硬件加速、系统优化、无缝 OTA 更新等
+
+---
+
+## 🔧 固件特色 [![](https://img.shields.io/badge/-固件亮点-FFFFFF.svg)](#固件特色)
+ZeroWrt 打破了传统固件的局限，提供了前所未有的性能提升与稳定性：
+
+- 🚀 **kmod 内核模块完整支持**：保证设备兼容性。
+- 🔥 **全锥型 NAT (NFT & BCM 双方案)**：提供极速网络转发。
+- ⚡ **SS AES 硬件加速**：极大提升代理速度，保障网络畅通无阻。
+- 🧠 **LTO & O3 构建优化**：多维度提升固件性能。
+- 🎮 **GPU 硬件加速**：解锁图形处理与视频加速功能。
+- 🖥 **HDMI 终端输出**：支持图形化查看日志、控制台输出。
+- 🌐 **BBRv3 / TCP Brutal 拥塞控制**：更适合高流量场景。
+- 🔧 **LLVM-BPF 支持**：提供 eBPF 程序的强大支持。
+- 📦 **Docker 支持**：在 OpenWrt 内部署 Docker 应用，增强灵活性。
+- ⏱ **硬件 RTC 时钟支持**：精准的时间同步与管理。
+
+---
+
+## 💾 插件预览 [![](https://img.shields.io/badge/-插件展示-FFFFFF.svg)](#插件预览)
+ZeroWrt 内置了多个功能强大的插件，帮助你更好地管理网络和设备：
+
+### 常见插件列表：
 
 | **内置插件**               | **状态** | **内置插件**         | **状态** |
 |----------------------------|:--------:|----------------------|:--------:|
@@ -55,43 +71,33 @@ ZeroWrt 内置了多个强大且精简的插件，覆盖了从网络管理到安
 
 ---
 
-### 插件状态说明：
+## 📥 固件下载 [![](https://img.shields.io/badge/-固件下载-FFFFFF.svg)](#固件下载)
+点击下表中的下载链接，轻松获得你所需的固件版本。
 
-- ✅ **可用**：插件已经完全集成并可稳定运行。
-- ❌ **不可用**：由于某些原因，该插件目前不可用。
-- ⏳ **计划中**：该插件将在未来的版本中支持，敬请期待。
-
----
-
-### 特别说明：
-
-- **AirPlay 2**：简易的 AirPlay 音频播放器，需配合 USB 声卡使用，适用于多房间音频播放。
-- **动态 DNS**：为路由器提供动态 IP 支持，方便外网访问。
-- **FRP 客户端**：用于穿透 NAT，支持内网穿透访问。
-- **KMS 服务器**：适用于需要激活 Microsoft 产品的环境。
+| **平台+设备名称**   | **固件编译状态**     | **固件下载**              |
+|:---------------------:|:--------------------:|:-------------------------:|
+| [X86_64 位](https://github.com/oppen321/ZeroWrt/releases/tag/X86_64) | ![编译状态](https://github.com/oppen321/ZeroWrt/actions/workflows/X86_64-OpenWrt.yml/badge.svg) | [下载链接](https://github.com/oppen321/ZeroWrt/releases/tag/X86_64) |
+| [ARMv8 Mini](https://github.com/oppen321/ZeroWrt/releases/tag/ARMv8_MINI) | ![编译状态](https://github.com/oppen321/ZeroWrt/actions/workflows/ARMv8-Mini-OpenWrt.yml/badge.svg) | [下载链接](https://github.com/oppen321/ZeroWrt/releases/tag/ARMv8_MINI) |
+| [ARMv8 Plus](https://github.com/oppen321/ZeroWrt/releases/tag/ARMv8_PLUS) | ![编译状态](https://github.com/oppen321/ZeroWrt/actions/workflows/ARMv8-Plus-OpenWrt.yml/badge.svg) | [下载链接](https://github.com/oppen321/ZeroWrt/releases/tag/ARMv8_PLUS) |
+| [Rockchip](https://github.com/oppen321/ZeroWrt/releases/tag/Rockchip) | ![编译状态](https://github.com/oppen321/ZeroWrt/actions/workflows/Rockchip-OpenWrt.yml/badge.svg) | [下载链接](https://github.com/oppen321/ZeroWrt/releases/tag/Rockchip) |
 
 ---
 
-## 🔧 默认登录信息
-
-```
-管理地址：http://10.0.0.1  
-          http://openwrt.lan  
-账户：root  
-密码：password
-```
+## ⚙️ 编译指南 [![](https://img.shields.io/badge/-编译指南-FFFFFF.svg)](#编译指南)
+1. **Fork 项目**：首先在 GitHub 上 Fork 该项目到你自己的仓库。
+2. **修改配置**：根据需要修改 `configs` 目录中的配置文件，或者上传自己的 `.config` 配置文件。
+3. **添加插件**：根据需求添加插件和功能。
+4. **运行编译**：进入 GitHub Actions，启动对应的编译工作流。
+5. **下载固件**：编译完成后，你可以在 [Releases](https://github.com/oppen321/ZeroWrt/releases) 页面下载最新固件。
 
 ---
 
-## 📥 下载与在线升级
-
-ZeroWrt 完美支持 **squashfs 在线升级（OTA）**，你可以轻松进行固件更新而无需重新配置设备。  
-（此处可放入你的固件下载链接）
+## ⚠️ 特别提示 [![](https://img.shields.io/badge/-免责声明-FFFFFF.svg)](#特别提示)
+- 本项目提供的固件不保证完全无 BUG，用户在使用过程中请自行评估风险。
+- 不提供任何技术支持，若遇到问题请参考相关文档或社区。
+- **请勿将本固件用于任何商业用途。**
 
 ---
 
-## 🎯 结语
-
-ZeroWrt 并非仅仅是一个 OpenWrt 的派生版本，它是经过深度优化、完美平衡性能与稳定性的 **超高端固件**。无论你是网络发烧友、IT 专业人士，还是需要高性能路由解决方案的企业用户，ZeroWrt 都能为你带来前所未有的体验。
-
-欢迎体验 **ZeroWrt** —— 将性能推向极限！🚀
+## 🙏 鸣谢 [![](https://img.shields.io/badge/-致谢-FFFFFF.svg)](#鸣谢)
+感谢以下社区和开发者的贡献，ZeroWrt
