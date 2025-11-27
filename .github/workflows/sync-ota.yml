@@ -1,0 +1,52 @@
+#
+# Copyright (c) 2019-2025 OPPEN321
+#
+# This is free software, licensed under the MIT License.
+# See /LICENSE for more information.
+#
+# https://github.com/zhiern/ZeroWrt
+# Description: Build OpenWrt using GitHub Actions
+
+
+name: 🚀 同步处理
+
+on:
+  workflow_dispatch:   # 手动触发
+  workflow_run:       # 在 Build workflow 完成后触发
+    workflows: ["💻 固件编译"]
+    types:
+      - completed
+
+jobs:
+  upload:
+    runs-on: ubuntu-24.04
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Sync OTA
+        run: |
+          mkdir -p ota
+          latest_tag=$(curl -s https://api.github.com/repos/QuickWrt/ZeroWrt/releases/latest | jq -r .tag_name)
+          wget -q https://github.com/QuickWrt/ZeroWrt/releases/download/$latest_tag/x86_64.json -O x86_64.json
+          wget -q https://github.com/QuickWrt/ZeroWrt/releases/download/$latest_tag/rockchip.json -O rockchip.json
+          jq -s 'add' x86_64.json rockchip.json > ota/ota.json
+     
+      - name: Release OTA
+        uses: SamKirkland/FTP-Deploy-Action@v4.3.5
+        with:
+          server: ${{ secrets.ftp_address }}
+          username: ftpopenwrt
+          password: ${{ secrets.ftp_password }}
+          server-dir: ota/
+          local-dir: ota/
+          dangerous-clean-slate: true
+
+      - name: Delete releases and workflows runs
+        uses: ophub/delete-releases-workflows@main
+        with:
+          delete_releases: true
+          releases_keep_latest: 5
+          delete_workflows: true
+          workflows_keep_day: 1
+          gh_token: ${{ secrets.workflow_token }}
