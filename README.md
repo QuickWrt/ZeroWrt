@@ -2,10 +2,10 @@
   <img width="768" src="https://cdn.jsdelivr.net/gh/haiibo/OpenWrt/images/openwrt.png"/>
   <h1>ZeroWrt — 基于 OpenWrt 的极致性能固件</h1>
 
-  <img src="https://img.shields.io/github/downloads/oppen321/ZeroWrt/total.svg?style=for-the-badge&color=32C955"/>
-  <img src="https://img.shields.io/github/stars/oppen321/ZeroWrt.svg?style=for-the-badge&color=orange"/>
-  <img src="https://img.shields.io/github/forks/oppen321/ZeroWrt.svg?style=for-the-badge&color=ff69b4"/>
-  <img src="https://img.shields.io/github/license/oppen321/ZeroWrt.svg?style=for-the-badge&color=blueviolet"/>
+  <img src="https://img.shields.io/github/downloads/QuickWrt/ZeroWrt/total.svg?style=for-the-badge&color=32C955"/>
+  <img src="https://img.shields.io/github/stars/QuickWrt/ZeroWrt.svg?style=for-the-badge&color=orange"/>
+  <img src="https://img.shields.io/github/forks/QuickWrt/ZeroWrt.svg?style=for-the-badge&color=ff69b4"/>
+  <img src="https://img.shields.io/github/license/QuickWrt/ZeroWrt.svg?style=for-the-badge&color=blueviolet"/>
 
   [![](https://img.shields.io/badge/-目录:-696969.svg)](#readme) 
   [![](https://img.shields.io/badge/-项目介绍-FFFFFF.svg)](#项目介绍) 
@@ -74,9 +74,9 @@ ZeroWrt 内置了多个功能强大的插件，帮助你更好地管理网络和
 ## 📥 固件下载 [![](https://img.shields.io/badge/-固件下载-FFFFFF.svg)](#固件下载)
 点击下表中的下载链接，轻松获得你所需的固件版本。
 
-| **平台+设备名称**   | **固件编译状态**     | **固件下载**              |
+| **固件版本**   | **固件编译状态**     | **固件下载**              |
 |:---------------------:|:--------------------:|:-------------------------:|
-| [固件地址](https://github.com/QuickWrt/ZeroWrt/releases/tag/X86_64) | ![编译状态](https://github.com/QuickWrt/ZeroWrt/actions/workflows/X86_64-OpenWrt.yml/badge.svg) | [下载链接](https://github.com/QuickWrt/ZeroWrt/releases/tag/X86_64) |
+| [固件版本](https://github.com/QuickWrt/ZeroWrt/releases/tag/v24.10.4) | ![编译状态](https://github.com/QuickWrt/ZeroWrt/actions/workflows/build-release.yml/badge.svg) | [下载链接](https://github.com/QuickWrt/ZeroWrt/releases/tag/v24.10.4) |
 
 ---
 
